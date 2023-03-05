@@ -1,0 +1,30 @@
+# mongo-db
+version: '3.7'
+services:
+  mongo-db:
+    image: mongo:4.2.3
+    container_name: mongo-db
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data/db:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: test
+    networks:
+      - mongo-db-network
+  rankers-back:
+    image: wdk1994/rankers-back:latest
+    container_name: rankers-back
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - mongo-db-network
+    depends_on:
+      - mongo-db
+networks:
+    mongo-db-network:
+        driver: bridge
